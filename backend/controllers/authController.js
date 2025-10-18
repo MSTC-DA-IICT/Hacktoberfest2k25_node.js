@@ -225,18 +225,34 @@ export const loginUser = async (req, res, next) => {
 export const getProfile = async (req, res, next) => {
   try {
     // TODO: Implement get profile logic
+    //altho user will be there, just incase added it
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "User is not validated",
+      });
+    }
+
 
     // Option 1: Use req.user directly (set by protect middleware)
     // return res.status(200).json({ success: true, user: req.user });
 
     // Option 2: Fetch fresh data from database
     // const user = await User.findById(req.user.id).select('-password');
-    // if (!user) { return 404 error }
-    // return res.status(200).json({ success: true, user });
+    const user = await User.findById(req.user.id).select("-password");
 
-    res.status(501).json({
-      success: false,
-      message: 'Get profile endpoint not implemented yet',
+    // if (!user) { return 404 error }
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found!",
+      });
+    }
+
+    // return res.status(200).json({ success: true, user });
+    return res.status(200).json({
+      success: true,
+      user,
     });
   } catch (error) {
     next(error);

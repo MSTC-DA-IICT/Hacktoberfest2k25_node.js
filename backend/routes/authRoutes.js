@@ -47,7 +47,7 @@ import { registerUser, loginUser, getProfile } from '../controllers/authControll
 import { validateRegister, validateLogin, validate } from '../middleware/validationMiddleware.js';
 
 // TODO: Import auth middleware
-// import { protect } from '../middleware/authMiddleware.js';
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -80,6 +80,7 @@ router.get('/test', (req, res) => {
   });
 });
 
+router.get('/profile', protect, getProfile);
 router.post('/register', [validateRegister, validate], registerUser);
 router.post('/login', [validateLogin, validate], loginUser);
 
